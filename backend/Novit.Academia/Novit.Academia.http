@@ -1,0 +1,6 @@
+@Novit.Academia_HostAddress = http://localhost:5267
+
+GET {{Novit.Academia_HostAddress}}/api/Carrito
+Accept: application/json
+
+###
