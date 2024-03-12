@@ -1,0 +1,7 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@SolucionInmobiliaria_HostAddress = http://localhost:5267
+
+GET {{SolucionInmobiliaria_HostAddress}}/api/Carrito
+Accept: application/json
+
+###
