@@ -22,7 +22,7 @@ public class UsuarioService(IUsuarioRepository usuarioRepository) : IUsuarioServ
 {
     public void AddUsuario(UsuarioRequestDto usuario)
     {
-        usuarioRepository.AddUsuario(usuario.Adapt<UsuarioDto>());
+        usuarioRepository.CrearUsuario(usuario.Adapt<UsuarioDto>());
     }
 
     public void DeleteUsuario(int id)

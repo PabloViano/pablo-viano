@@ -10,14 +10,14 @@ public interface IUsuarioRepository
 {
     List<Usuario> GetUsuarios();
     Usuario GetUsuario(int id);
-    void AddUsuario(UsuarioDto usuarioDto);
+    void CrearUsuario(UsuarioDto usuarioDto);
     string UpdateUsuario(int id, UsuarioDto usuarioDto);
     void DeleteUsuario(int id);
 }
 
 public class UsuarioRepository(AppDbContext context) : IUsuarioRepository
 {
-    public void AddUsuario(UsuarioDto usuarioDto)
+    public void CrearUsuario(UsuarioDto usuarioDto)
     {
         //Ver si el usuario ya existe
         if (context.Usuarios.FirstOrDefault(u => u.Id == usuarioDto.Id) != null)
@@ -28,13 +28,13 @@ public class UsuarioRepository(AppDbContext context) : IUsuarioRepository
         //Si no existe, crear un nuevo usuario y asignarle los valores del DTO
         var usuario = new Usuario
         {
-            Id = usuarioDto.Id,
+            Id = context.Usuarios.Count(),
             Nombre = usuarioDto.Nombre,
             Apellido = usuarioDto.Apellido,
             Email = usuarioDto.Email,
             Password = usuarioDto.Password,
             Rol = usuarioDto.Rol,
-            ReservasUsuario = usuarioDto.ReservasUsuario
+            ReservasUsuario = new List<Reserva>()
         };
 
         //Agregar el usuario a la base de datos

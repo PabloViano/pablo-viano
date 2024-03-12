@@ -3,6 +3,7 @@ using DataBase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SolucionInmobiliaria.Endpoints.DTO;
+using SolucionInmobiliaria.Services;
 
 namespace SolucionInmobiliaria.Endpoints
 {
@@ -16,7 +17,14 @@ namespace SolucionInmobiliaria.Endpoints
             app.MapGet("/", (AppDbContext context) =>
             {
                 return context.Usuarios.ToListAsync();
-            });
+            }).WithTags("Usuarios");
+
+            //Crear un usuario
+            app.MapPost("/", (IUsuarioService UsuarioService, [FromBody] UsuarioRequestDto usuario) =>
+            {
+                UsuarioService.AddUsuario(usuario);
+                return Results.Created();
+            }).WithTags("Usuarios");
         }
     }
 }
