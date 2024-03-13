@@ -13,6 +13,7 @@ public interface IUsuarioRepository
     void CrearUsuario(UsuarioDto usuarioDto);
     string UpdateUsuario(int id, UsuarioDto usuarioDto);
     void DeleteUsuario(int id);
+    bool VerificarUsuario(string usuario, string password);
 }
 
 public class UsuarioRepository(AppDbContext context) : IUsuarioRepository
@@ -100,6 +101,19 @@ public class UsuarioRepository(AppDbContext context) : IUsuarioRepository
         else
         {
             throw new Exception($"El usuario con id: {id} no existe");
+        }
+    }
+
+    public bool VerificarUsuario(string usuario, string password)
+    {
+        var Usuario = context.Usuarios.FirstOrDefault(u => u.Email == usuario && u.Password == password);
+        if (Usuario != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }       

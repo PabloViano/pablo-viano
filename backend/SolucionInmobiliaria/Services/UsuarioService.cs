@@ -16,6 +16,8 @@ public interface IUsuarioService
     string UpdateUsuario(int id, UsuarioRequestDto usuario);
 
     void AddUsuario(UsuarioRequestDto usuario);
+
+    bool VerificarUsuario(string usuario, string password);
 }
 
 public class UsuarioService(IUsuarioRepository usuarioRepository) : IUsuarioService
@@ -45,5 +47,10 @@ public class UsuarioService(IUsuarioRepository usuarioRepository) : IUsuarioServ
         usuarioRepository.UpdateUsuario(id, usuario.Adapt<UsuarioDto>());
 
         return $"Usuario con id {id} actualizado";
+    }
+
+    public bool VerificarUsuario(string usuario, string password)
+    {
+        return usuarioRepository.VerificarUsuario(usuario, password);
     }
 }

@@ -25,6 +25,12 @@ namespace SolucionInmobiliaria.Endpoints
                 UsuarioService.AddUsuario(usuario);
                 return Results.Created();
             }).WithTags("Usuarios");
+
+            //Verificar contraseña y usuario
+            app.MapGet("/{email}/{contraseña}", (IUsuarioService usuarioService, [FromQuery] string usuario, [FromQuery] string password) =>
+            {
+                return usuarioService.VerificarUsuario(usuario, password);
+            }).WithTags("Usuarios");
         }
     }
 }
