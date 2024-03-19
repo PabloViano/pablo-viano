@@ -14,6 +14,8 @@ namespace SolucionInmobiliaria.Domain
 
         public Usuario ClienteAsociado { get; set; }
 
+        public int IdVendedor { get; set; }
+
         public Producto ProductoReservado { get; set; }
 
         public DateTime FechaDesde { get; set; }

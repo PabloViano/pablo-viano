@@ -11,18 +11,35 @@ public interface IReservaService
 
     ReservaResponseDto GetReserva(int id);
 
-    void AddReserva(ReservaRequestDto reservaRequestDto);
+    void CreateReserva(ReservaRequestDto reservaRequestDto, int idCliente, string codigoProducto);
 
     string UpdateReserva(int id, ReservaRequestDto reserva);
 
     void DeleteReserva(int id);
+
+    void CancelarReserva(int idReserva);
+
+    void AprobarReserva(int idReserva);
+
+    void RechazarReserva(int idReserva);
 }
 
 public class ReservaService(IReservaRepository reservaRepository) : IReservaService
 {
-    public void AddReserva(ReservaRequestDto reservaRequest)
+    public void CreateReserva(ReservaRequestDto reservaRequest, int idCliente, string codigoProducto)
     {
-        reservaRepository.AddReserva(reservaRequest.Adapt<ReservaDto>());
+        reservaRepository.CreateReserva(reservaRequest.Adapt<ReservaDto>(), idCliente, codigoProducto);
+    }
+
+    public void CancelarReserva(int idReserva)
+    {
+        reservaRepository.CancelarReserva(idReserva);
+
+    }
+
+    public void AprobarReserva(int idReserva)
+    {
+        reservaRepository.AprobarReserva(idReserva);
     }
 
     public void DeleteReserva(int id)
@@ -47,5 +64,10 @@ public class ReservaService(IReservaRepository reservaRepository) : IReservaServ
         reservaRepository.UpdateReserva(id, reserva.Adapt<ReservaDto>());
 
         return "Reserva actualizada";
+    }
+
+    public void RechazarReserva(int idReserva)
+    {
+        reservaRepository.RechazarReserva(idReserva);
     }
 }

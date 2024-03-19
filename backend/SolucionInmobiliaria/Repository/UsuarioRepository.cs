@@ -13,7 +13,6 @@ public interface IUsuarioRepository
     void CrearUsuario(UsuarioDto usuarioDto);
     string UpdateUsuario(int id, UsuarioDto usuarioDto);
     void DeleteUsuario(int id);
-    bool VerificarUsuario(string usuario, string password);
 }
 
 public class UsuarioRepository(AppDbContext context) : IUsuarioRepository
@@ -33,9 +32,9 @@ public class UsuarioRepository(AppDbContext context) : IUsuarioRepository
             Nombre = usuarioDto.Nombre,
             Apellido = usuarioDto.Apellido,
             Email = usuarioDto.Email,
-            Password = usuarioDto.Password,
+            PasswordHash = usuarioDto.PasswordHash,
+            PasswordSalt = usuarioDto.PasswordSalt,
             Rol = usuarioDto.Rol,
-            ReservasUsuario = new List<Reserva>()
         };
 
         //Agregar el usuario a la base de datos
@@ -90,7 +89,8 @@ public class UsuarioRepository(AppDbContext context) : IUsuarioRepository
             usuario.Nombre = usuarioDto.Nombre;
             usuario.Apellido = usuarioDto.Apellido;
             usuario.Email = usuarioDto.Email;
-            usuario.Password = usuarioDto.Password;
+            usuario.PasswordHash = usuarioDto.PasswordHash;
+            usuario.PasswordSalt = usuarioDto.PasswordSalt;
             usuario.Rol = usuarioDto.Rol;
 
             //Guardar cambios en la base de datos
@@ -104,16 +104,4 @@ public class UsuarioRepository(AppDbContext context) : IUsuarioRepository
         }
     }
 
-    public bool VerificarUsuario(string usuario, string password)
-    {
-        var Usuario = context.Usuarios.FirstOrDefault(u => u.Email == usuario && u.Password == password);
-        if (Usuario != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 }       

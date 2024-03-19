@@ -3,6 +3,7 @@ using System;
 using DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SolucionInmobiliaria.Database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240319134648_AgregamosIdVendedor")]
+    partial class AgregamosIdVendedor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
@@ -111,13 +114,9 @@ namespace SolucionInmobiliaria.Database.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("PasswordHash")
+                    b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("BLOB");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("BLOB");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Rol")
                         .HasColumnType("INTEGER");
@@ -130,7 +129,7 @@ namespace SolucionInmobiliaria.Database.Migrations
             modelBuilder.Entity("SolucionInmobiliaria.Domain.Reserva", b =>
                 {
                     b.HasOne("SolucionInmobiliaria.Domain.Usuario", "ClienteAsociado")
-                        .WithMany()
+                        .WithMany("ReservasUsuario")
                         .HasForeignKey("ClienteAsociadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -142,6 +141,11 @@ namespace SolucionInmobiliaria.Database.Migrations
                     b.Navigation("ClienteAsociado");
 
                     b.Navigation("ProductoReservado");
+                });
+
+            modelBuilder.Entity("SolucionInmobiliaria.Domain.Usuario", b =>
+                {
+                    b.Navigation("ReservasUsuario");
                 });
 #pragma warning restore 612, 618
         }

@@ -19,18 +19,6 @@ namespace SolucionInmobiliaria.Endpoints
                 return context.Usuarios.ToListAsync();
             }).WithTags("Usuarios");
 
-            //Crear un usuario
-            app.MapPost("/", (IUsuarioService UsuarioService, [FromBody] UsuarioRequestDto usuario) =>
-            {
-                UsuarioService.AddUsuario(usuario);
-                return Results.Created();
-            }).WithTags("Usuarios");
-
-            //Verificar contraseña y usuario
-            app.MapGet("/{email}/{contraseña}", (IUsuarioService usuarioService, [FromQuery] string usuario, [FromQuery] string password) =>
-            {
-                return usuarioService.VerificarUsuario(usuario, password);
-            }).WithTags("Usuarios");
         }
     }
 }
