@@ -3,6 +3,7 @@ using System;
 using DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SolucionInmobiliaria.Database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240320162637_AgregamosTablaRoles")]
+    partial class AgregamosTablaRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
@@ -120,24 +123,7 @@ namespace SolucionInmobiliaria.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("186283e4-9ee9-4e62-8efc-28ed8e17f7fe"),
-                            Nombre = "administrador"
-                        },
-                        new
-                        {
-                            Id = new Guid("d1b47292-125f-4715-869b-1f49a13f0ca0"),
-                            Nombre = "cliente"
-                        },
-                        new
-                        {
-                            Id = new Guid("be0eb24e-3112-4f62-9532-05ee972421cf"),
-                            Nombre = "vendedor"
-                        });
+                    b.ToTable("Rol");
                 });
 
             modelBuilder.Entity("SolucionInmobiliaria.Domain.Usuario", b =>

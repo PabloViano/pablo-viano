@@ -8,7 +8,7 @@ namespace SolucionInmobiliaria.Endpoints.DTO;
 
         public EstadosReserva Estado { get; set; }
 
-        public required UsuarioDto ClienteAsociado { get; set; }
+        public required Guid IdClienteAsociado { get; set; }
 
         public required int IdVendedor { get; set; }
 

@@ -24,7 +24,7 @@ public class EndpointsReservas : ICarterModule
 
 
         //Crear reserva
-        app.MapPost("/{idCliente}/{idProducto}", ([FromServices] IReservaService reservaService, [FromBody] ReservaRequestDto reservaDto, [FromQuery] int idCliente, [FromQuery] string codigoProducto) =>
+        app.MapPost("/{idCliente}/{idProducto}", ([FromServices] IReservaService reservaService, [FromBody] ReservaRequestDto reservaDto, [FromQuery] Guid idCliente, [FromQuery] string codigoProducto) =>
         {
             reservaService.CreateReserva(reservaDto, idCliente, codigoProducto);
 

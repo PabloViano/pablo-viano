@@ -7,28 +7,19 @@ namespace SolucionInmobiliaria.Domain
     public class Usuario
     {
         [Key]
-        public required int Id { get; set; }
-
-        public required Roles Rol { get; set; }
+        public required Guid Id { get; set; }
 
         public string? Nombre { get; set; }
 
-        public string? Apellido { get; set; }
-
-        public required string Email { get; set; }
+        public string Username { get; set; }
 
         public required byte[] PasswordHash { get; set; }
 
         public required byte[] PasswordSalt { get; set; }
 
-
+        public List<Rol>? RolesUsuario { get; set; }
     }
 
-    public enum Roles
-    {
-        Vendedor,
-        Comercial
-    }
 }
 
 

@@ -11,7 +11,7 @@ public interface IReservaService
 
     ReservaResponseDto GetReserva(int id);
 
-    void CreateReserva(ReservaRequestDto reservaRequestDto, int idCliente, string codigoProducto);
+    void CreateReserva(ReservaRequestDto reservaRequestDto, Guid idCliente, string codigoProducto);
 
     string UpdateReserva(int id, ReservaRequestDto reserva);
 
@@ -26,7 +26,7 @@ public interface IReservaService
 
 public class ReservaService(IReservaRepository reservaRepository) : IReservaService
 {
-    public void CreateReserva(ReservaRequestDto reservaRequest, int idCliente, string codigoProducto)
+    public void CreateReserva(ReservaRequestDto reservaRequest, Guid idCliente, string codigoProducto)
     {
         reservaRepository.CreateReserva(reservaRequest.Adapt<ReservaDto>(), idCliente, codigoProducto);
     }

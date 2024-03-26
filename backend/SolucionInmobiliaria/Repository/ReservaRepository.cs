@@ -10,7 +10,7 @@ public interface IReservaRepository
 {
     List<Reserva> GetReservas();
     Reserva GetReserva(int id);
-    void CreateReserva(ReservaDto reservaDto, int idCliente, string codigoProducto);
+    void CreateReserva(ReservaDto reservaDto, Guid idCliente, string codigoProducto);
     string UpdateReserva(int id, ReservaDto reservaDto);
     void DeleteReserva(int id);
     void CancelarReserva(int id);
@@ -20,7 +20,7 @@ public interface IReservaRepository
 
 public class ReservaRepository(AppDbContext context) : IReservaRepository
 {
-    public void CreateReserva(ReservaDto reservaDto, int idCliente, string codigoProducto)
+    public void CreateReserva(ReservaDto reservaDto, Guid idCliente, string codigoProducto)
     {
         if (context.Usuarios.FirstOrDefault(p => p.Id == idCliente) == null)
         {
@@ -40,7 +40,7 @@ public class ReservaRepository(AppDbContext context) : IReservaRepository
 
             Estado = EstadosReserva.Ingresada,
 
-            ClienteAsociado = context.Usuarios.FirstOrDefault(p => p.Id == idCliente),
+            IdClienteAsociado = idCliente,
 
 
             ProductoReservado = context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == codigoProducto),
@@ -62,9 +62,9 @@ public class ReservaRepository(AppDbContext context) : IReservaRepository
         }
 
         //Verificar si el vendedor no tiene mas de 3 reservas ingresadas
-        if (context.Reservas.GroupBy(r => r.IdVendedor == reserva.IdVendedor && r.Estado == EstadosReserva.Ingresada).Count() > 3)
+        if (context.Reservas.GroupBy(r => r.IdVendedorAsociado == reserva.IdVendedorAsociado && r.Estado == EstadosReserva.Ingresada).Count() > 3)
         {
-            throw new Exception($"El vendedor con id: {reserva.IdVendedor} ya tiene 3 reservas ingresadas");
+            throw new Exception($"El vendedor con id: {reserva.IdVendedorAsociado} ya tiene 3 reservas ingresadas");
         }
 
         context.Reservas.Add(reserva);
@@ -109,39 +109,21 @@ public class ReservaRepository(AppDbContext context) : IReservaRepository
     {
         var Reserva = context.Reservas.FirstOrDefault(r => r.Id == id);
 
-        if (Reserva != null)
+        if (Reserva != null && context.Usuarios.FirstOrDefault(u => u.Id == reservaDto.IdClienteAsociado) != null && context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == reservaDto.ProductoReservado.CodigoAlfanumero) != null)
         {
             Reserva.Id = reservaDto.Id;
             Reserva.FechaDesde = reservaDto.FechaDesde;
             Reserva.FechaHasta = reservaDto.FechaHasta;
             Reserva.Estado = reservaDto.Estado;
-            Reserva.ClienteAsociado = new Usuario
-            {
-                Id = reservaDto.ClienteAsociado.Id,
-                Nombre = reservaDto.ClienteAsociado.Nombre,
-                Apellido = reservaDto.ClienteAsociado.Apellido,
-                Email = reservaDto.ClienteAsociado.Email,
-                PasswordHash = reservaDto.ClienteAsociado.PasswordHash,
-                PasswordSalt = reservaDto.ClienteAsociado.PasswordSalt,
-                Rol = Roles.Comercial
-            };
-            Reserva.ProductoReservado = new Producto
-            {
-                CodigoAlfanumero = reservaDto.ProductoReservado.CodigoAlfanumero,
-                Barrio = reservaDto.ProductoReservado.Barrio,
-                Price = reservaDto.ProductoReservado.Price,
-                UrlImagen = reservaDto.ProductoReservado.UrlImagen,
-                Estado = reservaDto.ProductoReservado.Estado,
-                Descripcion = reservaDto.ProductoReservado.Descripcion
-            };
-
+            Reserva.IdClienteAsociado = context.Usuarios.FirstOrDefault(u => u.Id == reservaDto.IdClienteAsociado).Id;
+            Reserva.ProductoReservado = context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == reservaDto.ProductoReservado.CodigoAlfanumero);
             context.SaveChanges();
 
             return $"La Reserva N° {id}, fue modificada correctamente";
         }
         else
         {
-            throw new Exception($"La reserva con id: {id} no existe");
+            throw new Exception($"La reserva con id: {id} no existe o el id del cliente es inexistente");
         }
     }
 

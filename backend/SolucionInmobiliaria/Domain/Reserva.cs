@@ -12,9 +12,9 @@ namespace SolucionInmobiliaria.Domain
 
         public EstadosReserva Estado { get; set; }
 
-        public Usuario ClienteAsociado { get; set; }
+        public Guid IdClienteAsociado { get; set; }
 
-        public int IdVendedor { get; set; }
+        public Guid IdVendedorAsociado { get; set; }
 
         public Producto ProductoReservado { get; set; }
 
