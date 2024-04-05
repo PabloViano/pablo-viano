@@ -41,6 +41,13 @@ public class ProductoRepository(AppDbContext context) : IProductoRepository
 
         if (producto != null)
         {
+            foreach (var reserva in context.Reservas)
+            {
+                if (reserva.ProductoReservado == codigoAlfanumerico)
+                {
+                    throw new Exception($"El producto con id: {codigoAlfanumerico} tiene reservas asociadas");
+                }
+            }
             //Eliminar el producto de la base de datos
             context.Productos.Remove(producto);
 

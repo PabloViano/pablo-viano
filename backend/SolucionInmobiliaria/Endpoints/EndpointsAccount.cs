@@ -1,6 +1,7 @@
 ﻿using Carter;
 using DataBase;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SolucionInmobiliaria.Domain;
@@ -29,17 +30,16 @@ public class AccountEndpoints(IConfiguration configuration) : ICarterModule
                 Nombre = request.Username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                RolesUsuario = new List<Rol>()
+                RolesUsuario = new List<Rol>() { context.Roles.FirstOrDefault(x => x.Nombre == request.Role)}
             };
-            user.RolesUsuario.Add(context.Roles.FirstOrDefault(x => x.Nombre == request.Role));
 
-            var role = context.Roles.FirstOrDefault(x => x.Nombre == request.Role);
 
-            if (role is null)
+            if (context.Roles.FirstOrDefault(x => x.Nombre == request.Role) is null)
             {
                 return Results.BadRequest("Rol inexistente.");
             }
 
+            //context.Roles.FirstOrDefault(x => x.Nombre == request.Role.ToString()).Usuarios.Add(user);
 
             context.Usuarios.Add(user);
 
@@ -90,9 +90,10 @@ public class AccountEndpoints(IConfiguration configuration) : ICarterModule
             return Results.Ok(role);
         })
             .WithTags("Account")
-            .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
-        app.MapPost("/User/{userId:Guid}/AddRole/{roleId:Guid}", (AppDbContext context, Guid userId, Guid roleId) => {
+        app.MapPost("/User/{userId:Guid}/AddRole/{roleId:Guid}", (AppDbContext context, Guid userId, Guid roleId) =>
+        {
 
             var user = context.Usuarios.FirstOrDefault(x => x.Id == userId);
 
@@ -115,7 +116,7 @@ public class AccountEndpoints(IConfiguration configuration) : ICarterModule
             return Results.Ok("Rol asociado");
         })
             .WithTags("Account")
-            .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
 
         app.MapGet("/User", (AppDbContext context) =>
@@ -125,7 +126,7 @@ public class AccountEndpoints(IConfiguration configuration) : ICarterModule
             return Results.Ok(users);
         })
             .WithTags("Account")
-            .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
         app.MapGet("/Role", (AppDbContext context) =>
         {

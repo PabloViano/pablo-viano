@@ -43,22 +43,23 @@ public class ReservaRepository(AppDbContext context) : IReservaRepository
             IdClienteAsociado = idCliente,
 
 
-            ProductoReservado = context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == codigoProducto),
+            ProductoReservado = codigoProducto,
 
         };
 
-        reserva.ProductoReservado.Estado = EstadosProducto.Reservado;
+        var productoReservado = context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == codigoProducto);
+        productoReservado.Estado = EstadosProducto.Reservado;
 
         //Verificar si el producto es de Barrio X y su precio es menor a 100000, si cumple se aprueba la reserva
-        if (reserva.ProductoReservado.Barrio == "X" && reserva.ProductoReservado.Price < 100000)
+        if (productoReservado.Barrio == "X" && productoReservado.Price < 100000)
         {
-            reserva.ProductoReservado.Estado = EstadosProducto.Vendido;
+            productoReservado.Estado = EstadosProducto.Vendido;
         }
 
         //Verificar si el producto es de Barrio Y y es el ultimo en venta, si cumple se aprueba la reserva
-        if (context.Productos.GroupBy(p => p.Barrio == reserva.ProductoReservado.Barrio).Count() == 1)
+        if (context.Productos.GroupBy(p => p.Barrio == productoReservado.Barrio).Count() == 1)
         {
-            reserva.ProductoReservado.Estado = EstadosProducto.Vendido;
+            productoReservado.Estado = EstadosProducto.Vendido;
         }
 
         //Verificar si el vendedor no tiene mas de 3 reservas ingresadas
@@ -109,14 +110,14 @@ public class ReservaRepository(AppDbContext context) : IReservaRepository
     {
         var Reserva = context.Reservas.FirstOrDefault(r => r.Id == id);
 
-        if (Reserva != null && context.Usuarios.FirstOrDefault(u => u.Id == reservaDto.IdClienteAsociado) != null && context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == reservaDto.ProductoReservado.CodigoAlfanumero) != null)
+        if (Reserva != null && context.Usuarios.FirstOrDefault(u => u.Id == reservaDto.IdClienteAsociado) != null && context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == reservaDto.ProductoReservado) != null)
         {
             Reserva.Id = reservaDto.Id;
             Reserva.FechaDesde = reservaDto.FechaDesde;
             Reserva.FechaHasta = reservaDto.FechaHasta;
             Reserva.Estado = reservaDto.Estado;
             Reserva.IdClienteAsociado = context.Usuarios.FirstOrDefault(u => u.Id == reservaDto.IdClienteAsociado).Id;
-            Reserva.ProductoReservado = context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == reservaDto.ProductoReservado.CodigoAlfanumero);
+            Reserva.ProductoReservado = reservaDto.ProductoReservado;
             context.SaveChanges();
 
             return $"La Reserva N° {id}, fue modificada correctamente";
@@ -135,7 +136,7 @@ public class ReservaRepository(AppDbContext context) : IReservaRepository
         if (reserva != null && reserva.Estado != EstadosReserva.Cancelada)
         {
             reserva.Estado = EstadosReserva.Cancelada;
-            reserva.ProductoReservado.Estado = EstadosProducto.Disponible;
+            context.Productos.FirstOrDefault(x => x.CodigoAlfanumero == reserva.ProductoReservado).Estado = EstadosProducto.Disponible;
             context.SaveChanges();
         }
         else
@@ -152,7 +153,7 @@ public class ReservaRepository(AppDbContext context) : IReservaRepository
         if (reserva != null && reserva.Estado != EstadosReserva.Aprobada)
         {
             reserva.Estado = EstadosReserva.Aprobada;
-            reserva.ProductoReservado.Estado = EstadosProducto.Vendido;
+            context.Productos.FirstOrDefault(x => x.CodigoAlfanumero == reserva.ProductoReservado).Estado = EstadosProducto.Vendido;
             context.SaveChanges();
         }
         else

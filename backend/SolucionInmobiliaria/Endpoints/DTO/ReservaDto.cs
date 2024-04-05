@@ -10,9 +10,9 @@ namespace SolucionInmobiliaria.Endpoints.DTO;
 
         public required Guid IdClienteAsociado { get; set; }
 
-        public required int IdVendedor { get; set; }
+        public required Guid IdVendedor { get; set; }
 
-        public required ProductoDto ProductoReservado { get; set; }
+        public required string ProductoReservado { get; set; }
 
         public DateTime FechaDesde { get; set; }
 
@@ -36,9 +36,9 @@ public class ReservaResponseDto
 
     public EstadosReserva Estado { get; set; }
 
-    public required UsuarioDto ClienteAsociado { get; set; }
+    public required Guid IdClienteAsociado { get; set; }
 
-    public required ProductoDto ProductoReservado { get; set; }
+    public required string ProductoReservado { get; set; }
 
     public DateTime FechaDesde { get; set; }
 

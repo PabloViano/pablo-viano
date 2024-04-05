@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Landing Page - Inmobiliaria Novit</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .landing-page {
+            background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #3498db; /* Color azul */
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9; /* Cambio de color al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-page">
+        <img src="assets/logo.png" alt="Inmobiliaria Novit" width="200" style="margin-bottom: 2%;">
+        <h1>Inmobiliaria Novit</h1>
+        <a href="productos" class="btn">Catálogo de Productos</a>
+        <a href="usuarios" class="btn">Lista de Usuarios</a>
+    </div>
+</body>
+</html>

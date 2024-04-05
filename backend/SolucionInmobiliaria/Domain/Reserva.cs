@@ -16,7 +16,7 @@ namespace SolucionInmobiliaria.Domain
 
         public Guid IdVendedorAsociado { get; set; }
 
-        public Producto ProductoReservado { get; set; }
+        public string ProductoReservado { get; set; }
 
         public DateTime FechaDesde { get; set; }
 
