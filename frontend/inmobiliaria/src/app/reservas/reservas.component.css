@@ -1,0 +1,10 @@
+.label {
+    font-weight: bold; /* Hace que el texto sea más grueso */
+    font-size: 20px; /* Ajusta el tamaño de la fuente */
+    text-decoration: underline; /* Subraya el texto */
+    margin-right: 5px; /* Agrega un espacio entre la etiqueta y el valor */
+}
+
+.value {
+    font-size: 20px; /* Ajusta el tamaño de la fuente */
+}

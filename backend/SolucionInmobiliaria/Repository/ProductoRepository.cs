@@ -7,7 +7,7 @@ namespace SolucionInmobiliaria.Repository;
 public interface IProductoRepository
 {
     List<Producto> GetProductos();
-    string UpdateProducto(string codigo, ProductoDto productoDto);
+    string UpdateProducto(string codigo, ProductoModificadoDto productoDto);
     void DeleteProducto(string codigo);
     Producto GetProducto(string codigo);
     void AddProducto(ProductoDto producto);
@@ -19,20 +19,34 @@ public class ProductoRepository(AppDbContext context) : IProductoRepository
     {
         Producto producto1 = new Producto
         {
-            CodigoAlfanumero = $"A{ context.Productos.Count() + 1}",
+            CodigoAlfanumero = $"A{ context.Productos.Count() + 2}",
             Barrio = producto.Barrio,
             Price = producto.Price,
             UrlImagen = producto.UrlImagen,
-            Estado = producto.Estado,
             Descripcion = producto.Descripcion
         };
+
+        if (producto.Estado == "Disponible")
+        {
+            producto1.Estado = EstadosProducto.Disponible;
+        }
+        else if (producto.Estado == "Reservado")
+        {
+            producto1.Estado = EstadosProducto.Reservado;
+        }
+        else if (producto.Estado == "Vendido")
+        {
+            producto1.Estado = EstadosProducto.Vendido;
+        }
+        else
+        {
+            throw new Exception("El estado del producto no es valido");
+        }
 
         context.Productos.Add(producto1);
 
         context.SaveChanges();
     }
-
-
 
     public void DeleteProducto(string codigoAlfanumerico)
     {
@@ -79,17 +93,28 @@ public class ProductoRepository(AppDbContext context) : IProductoRepository
         return context.Productos.ToList();
     }
 
-    public string UpdateProducto(string codigo, ProductoDto productoDto)
+    public string UpdateProducto(string codigoAlfanumero, ProductoModificadoDto productoModificado)
     {
-        var producto = context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == codigo);
+        var producto = context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == codigoAlfanumero);
 
         if (producto != null)
         {
-            producto.Barrio = productoDto.Barrio;
-            producto.Price = productoDto.Price;
-            producto.UrlImagen = productoDto.UrlImagen;
-            producto.Estado = productoDto.Estado;
-            producto.Descripcion = productoDto.Descripcion;
+            if (productoModificado.Barrio != null && productoModificado.Barrio != producto.Barrio)
+            {
+                producto.Barrio = productoModificado.Barrio;
+            }
+            if (productoModificado.Price != 0 && producto.Price != productoModificado.Price)
+            {
+                producto.Price = productoModificado.Price;
+            }
+            if (productoModificado.UrlImagen != null && producto.UrlImagen != productoModificado.UrlImagen)
+            {
+                producto.UrlImagen = productoModificado.UrlImagen;
+            }
+            if (productoModificado.Descripcion != null && producto.Descripcion != productoModificado.Descripcion)
+            {
+                producto.Descripcion = productoModificado.Descripcion;
+            }
 
             context.SaveChanges();
 
@@ -97,7 +122,7 @@ public class ProductoRepository(AppDbContext context) : IProductoRepository
         }
         else
         {
-            throw new Exception($"El producto con id: {codigo} no existe");
+            throw new Exception($"El producto con id: {codigoAlfanumero} no existe");
         }
     }
 }

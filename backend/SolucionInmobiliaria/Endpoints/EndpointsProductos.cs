@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SolucionInmobiliaria.Domain;
 using SolucionInmobiliaria.Endpoints.DTO;
 using SolucionInmobiliaria.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SolucionInmobiliaria.Endpoints;
 
@@ -14,11 +15,19 @@ public class EndpointsProductos : ICarterModule
         var app = routes.MapGroup("/api/Productos");
 
         //Mostrar la lista completa de productos
-        app.MapGet("/", (IProductoService productoService ) =>
+        app.MapGet("/", (IProductoService productoService) =>
         {
             var productos = productoService.GetProductos();
 
             return Results.Ok(productos);
+
+        }).WithTags("Productos");
+
+        app.MapGet("/{codigoAlfanumerico}", (IProductoService productoService, string codigoAlfanumerico) =>
+        {
+            var producto = productoService.GetProducto(codigoAlfanumerico);
+
+            return producto != null ? Results.Ok(producto) : Results.NotFound();
 
         }).WithTags("Productos");
 
@@ -29,7 +38,8 @@ public class EndpointsProductos : ICarterModule
 
             return Results.Created();
 
-        }).WithTags("Productos");
+        }).WithTags("Productos")
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
         //Eliminar un producto con su codigo AlfaNumerico
         app.MapDelete("/{codigoAlfaNumerico}", (IProductoService productoService, string codigoAlfaNumerico) =>
@@ -38,16 +48,18 @@ public class EndpointsProductos : ICarterModule
 
             return Results.NoContent();
 
-        }).WithTags("Productos");
+        }).WithTags("Productos")
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
         //Modificar un producto con su codigo AlfaNumerico
-        app.MapPut("/{codigoAlfanumerico}/Producto", ([FromServices] IProductoService productoService, string codigoProducto, [FromBody] ProductoRequestDto productoDto) =>
+        app.MapPut("/{codigoAlfanumero}", ([FromServices] IProductoService productoService, string codigoAlfanumero, [FromBody] ProductoModificadoDto productoDto) =>
         {
-            productoService.UpdateProducto(codigoProducto, productoDto);
+            productoService.UpdateProducto(codigoAlfanumero, productoDto);
 
             return Results.Ok();
 
-        }).WithTags("Productos");
+        }).WithTags("Productos")
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
 
     }

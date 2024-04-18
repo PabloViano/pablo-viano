@@ -13,7 +13,7 @@ public interface IProductoService
 
     void CreateProducto(ProductoRequestDto producto);
 
-    string UpdateProducto(string codigoAlfanumero, ProductoRequestDto producto);
+    string UpdateProducto(string codigoAlfanumero, ProductoModificadoDto producto);
 
     void DeleteProducto(string codigoAlfanumero);
 }
@@ -42,9 +42,9 @@ public class ProductoService(IProductoRepository productoRepository) : IProducto
         return productoRepository.GetProductos().Adapt<List<ProductoResponseDto>>();
     }
 
-    public string UpdateProducto(string codigoAlfanumero, ProductoRequestDto producto)
+    public string UpdateProducto(string codigoAlfanumero, ProductoModificadoDto producto)
     {
-        productoRepository.UpdateProducto(codigoAlfanumero, producto.Adapt<ProductoDto>());
+        productoRepository.UpdateProducto(codigoAlfanumero, producto);
 
         return $"Producto con codigo {codigoAlfanumero} actualizado";
     }

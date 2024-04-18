@@ -47,19 +47,23 @@ public class ReservaRepository(AppDbContext context) : IReservaRepository
 
         };
 
+
         var productoReservado = context.Productos.FirstOrDefault(p => p.CodigoAlfanumero == codigoProducto);
         productoReservado.Estado = EstadosProducto.Reservado;
+        productoReservado.IDReserva = reserva.Id;
 
         //Verificar si el producto es de Barrio X y su precio es menor a 100000, si cumple se aprueba la reserva
         if (productoReservado.Barrio == "X" && productoReservado.Price < 100000)
         {
             productoReservado.Estado = EstadosProducto.Vendido;
+            reserva.Estado = EstadosReserva.Aprobada;
         }
 
         //Verificar si el producto es de Barrio Y y es el ultimo en venta, si cumple se aprueba la reserva
         if (context.Productos.GroupBy(p => p.Barrio == productoReservado.Barrio).Count() == 1)
         {
             productoReservado.Estado = EstadosProducto.Vendido;
+            reserva.Estado = EstadosReserva.Aprobada;
         }
 
         //Verificar si el vendedor no tiene mas de 3 reservas ingresadas

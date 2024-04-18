@@ -1,3 +1,55 @@
-<p>
-  reservas works!
-</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Landing Page - Inmobiliaria Novit</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .landing-page {
+            background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #3498db; /* Color azul */
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9; /* Cambio de color al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-page">
+        <h1>Reserva del Producto N°: {{reservaData.productoReservado}}</h1>
+        <p><span class="label">Estado:</span> <span class="value">{{reservaData.estado == 0 ? "Ingresada" : reservaData.estado == 1 ? "Cancelada" : reservaData.estado == 2 ? "Aprobada" : "Rechazada"}}</span></p>
+        <p><span class="label">Reservado Desde:</span> <span class="value">{{reservaData.fechaDesde}}</span></p>
+        <p><span class="label">Reservado Hasta:</span> <span class="value">{{reservaData.fechaHasta}}</span></p>
+        <p><span class="label">ID de la Reserva:</span> <span class="value">{{idReserva}}</span></p>
+        <p><span class="label">ID Cliente Asociado:</span> <span class="value">{{reservaData.idClienteAsociado}}</span></p>
+        <a href="/productos" class="btn">Volver Atrás</a>
+    </div>
+</body>
+</html>

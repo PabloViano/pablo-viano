@@ -12,9 +12,11 @@ public class ProductoDto
 
     public string? UrlImagen { get; set; }
 
-    public required EstadosProducto Estado { get; set; }
+    public string? Estado { get; set; }
 
     public string? Descripcion { get; set; }
+
+    public int? IDReserva { get; set; }
 }
 
 public class ProductoRequestDto
@@ -26,9 +28,11 @@ public class ProductoRequestDto
 
     public string? UrlImagen { get; set; }
 
-    public required EstadosProducto Estado { get; set; }
+    public string? Estado { get; set; }
 
     public string? Descripcion { get; set; }
+
+    public int? IDReserva { get; set; }
 }
 
 public class ProductoResponseDto
@@ -41,7 +45,20 @@ public class ProductoResponseDto
 
     public string? UrlImagen { get; set; }
 
-    public required EstadosProducto Estado { get; set; }
+    public string? Estado { get; set; }
 
     public string? Descripcion { get; set; }
+
+    public int? IDReserva { get; set; }
+}
+
+public class ProductoModificadoDto
+{
+    public string Barrio { get; set; }
+
+    public string Descripcion { get; set; }
+
+    public double Price { get; set; }
+
+    public string UrlImagen { get; set; }
 }

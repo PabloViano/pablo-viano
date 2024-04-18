@@ -13,6 +13,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/material/material.module';
 import { InformacionComponent } from './standalone/informacion/informacion.component'
 import { ReservasComponent } from './reservas/reservas.component';
+import { NuevoProductoComponent } from './producto/nuevo-producto/nuevo-producto.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ModificarProductoComponent } from './producto/modificar-producto/modificar-producto.component';
 
 @NgModule({
   declarations: [						
@@ -21,7 +24,9 @@ import { ReservasComponent } from './reservas/reservas.component';
       ProductoDetalleComponent,
       UsuariosComponent,
       HomeComponent,
-      ReservasComponent
+      ReservasComponent,
+      NuevoProductoComponent,
+      ModificarProductoComponent
    ],
   imports: [
     BrowserModule,
@@ -30,6 +35,8 @@ import { ReservasComponent } from './reservas/reservas.component';
     HttpClientModule,
     MaterialModule,
     InformacionComponent,
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [
     provideAnimationsAsync()

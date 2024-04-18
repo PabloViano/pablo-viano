@@ -1,8 +1,9 @@
 export interface Producto{
-    codigoAlfanumero: string;
     barrio: string;
+    codigoAlfanumero: string;
+    descripcion: string;
+    estado: number;
     price: number | undefined;
     urlImagen?: string;
-    estado: number;
-    descripcion: string | undefined ;
+    IDReserva?: string | undefined;
   }

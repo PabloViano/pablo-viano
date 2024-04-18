@@ -15,9 +15,11 @@ namespace SolucionInmobiliaria.Domain
 
         public string? UrlImagen { get; set; }
 
-        public EstadosProducto Estado { get; set; }
+        public EstadosProducto? Estado { get; set; }
 
         public string? Descripcion { get; set; }
+
+        public int? IDReserva { get; set; }
     }
 
     public enum  EstadosProducto

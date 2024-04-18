@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import * as jwt from 'jwt-decode';
 import { environment } from '../../environments/environment';
 import { User, UserLogin, UserRegister } from './interface';
-import * as jwt from 'jwt-decode';
 import { AuthStatus } from './interface/auth-status.enum';
 import { Router } from '@angular/router';
 
@@ -12,73 +13,58 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  private http = inject(HttpClient);
-  private router = inject(Router);
-  private readonly url = environment.apiUrl
+  private readonly url = environment.apiUrl;
+  private _authStatus = new BehaviorSubject<AuthStatus>(AuthStatus.checking);
+  private _currentUser = new BehaviorSubject<User | undefined>(undefined);
 
-  private _authStatus = signal<AuthStatus>(AuthStatus.checking)
-  private _currentUser = signal<User | undefined>(undefined)
+  constructor(private http: HttpClient, private router: Router) {}
 
-  public authStatus = computed(() => this._authStatus())
-  public currentUser = computed(() => this._currentUser())
+  get authStatus(): Observable<AuthStatus> {
+    return this._authStatus.asObservable();
+  }
 
-
-
-  // constructor(private http: HttpClient) { }
+  get currentUser(): Observable<User | undefined> {
+    return this._currentUser.asObservable();
+  }
 
   register(newUser: UserRegister): Observable<any> {
-    return this.http.post<any>(`${this.url}/account/register`, newUser)
+    return this.http.post<any>(`${this.url}/account/register`, newUser);
   }
 
   login(userLogin: UserLogin): Observable<any> {
-    return this.http.post<any>(`${this.url}/account/login`, userLogin)
-      .pipe(
-        map(({ accessToken }) => {
-          this.setAuthentication(accessToken);
-          return accessToken;
-        })
-      )
+    return this.http.post<any>(`${this.url}/account/login`, userLogin).pipe(
+      map(({ accessToken }) => {
+        this.setAuthentication(accessToken);
+        return accessToken;
+      })
+    );
   }
 
-
-  setAuthentication(token: string | null) {
-
+  setAuthentication(token: string | null): void {
     if (token) {
-
-      localStorage.setItem('accessToken', token)
-
-      const userResponse = jwt.jwtDecode(token) as User
-
-      console.log('userResponse: ', userResponse);
-
-      this._authStatus.set(AuthStatus.authenticated)
-
-      this._currentUser.set({
+      localStorage.setItem('accessToken', token);
+      const userResponse = jwt.jwtDecode(token) as User;
+      this._authStatus.next(AuthStatus.authenticated);
+      this._currentUser.next({
         name: userResponse.name,
         role: userResponse.role,
         exp: userResponse.exp
-      })
+      });
     }
-
-    console.log('señal computada: ', this.currentUser());
-
   }
 
-
-  checkStatus() {
+  checkStatus(): void {
     const token = localStorage.getItem('accessToken');
-    console.log('checkStatus', token);
-
-    this.setAuthentication(token)
+    this.setAuthentication(token);
   }
 
-  logout(){
+  logout(): void {
     localStorage.removeItem('accessToken');
-    this.router.navigateByUrl('/auth/login')
+    this._authStatus.next(AuthStatus.noAuthenticated);
+    this.router.navigateByUrl('/auth/login');
   }
 
   getToken(): string | null {
     return localStorage.getItem('accessToken');
   }
-
 }

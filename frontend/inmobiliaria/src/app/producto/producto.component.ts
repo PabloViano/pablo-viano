@@ -11,14 +11,14 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 export class ProductosComponent implements OnInit {
   private productoService = inject(ProductoService);
 
-  title: string = 'Seccion Productos';
-  displayedColumns: string[] = ['nombre', 'descripcion', 'precio', 'estado', 'barrio'];
-  productos: Producto[] = [];
+  displayedColumns: string[] = ['urlImagen','barrio', 'descripcion','estado', 'price', 'eliminar','modificar'];
+  productos: any[] = [];
 
   ngOnInit(): void {
     this.productoService.getProductos().subscribe({
       next: (productos) => {
         this.productos = productos;
+        console.log(this.productos);
       },
       error: (err) => {
         console.log(err);
@@ -26,27 +26,4 @@ export class ProductosComponent implements OnInit {
     });
   }
 
-  sinStock(): string {
-    return 'green';
-  }
-
-  action(event: MatTabChangeEvent) {
-    switch (event.tab.textLabel) {
-      case 'res':
-        console.log('Filtrar productos reservados');
-
-        break;
-      case 'can':
-        console.log('Filtrar productos rechazados');
-
-        break;
-      case 'fin':
-        console.log('Filtrar productos finalizados');
-
-        break;
-      default:
-
-        break;
-    }
-  }
 }

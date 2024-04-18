@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SolucionInmobiliaria.Domain;
 using SolucionInmobiliaria.Endpoints.DTO;
 using SolucionInmobiliaria.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SolucionInmobiliaria.Endpoints;
 
@@ -22,6 +23,13 @@ public class EndpointsReservas : ICarterModule
 
         }).WithTags("Reservas");
 
+        app.MapGet("/{idReserva}", (IReservaService reservaService, string idReserva) =>
+        {
+            var reserva = reservaService.GetReserva(int.Parse(idReserva));
+
+            return Results.Ok(reserva);
+        }).WithTags("Reservas");
+
 
         //Crear reserva
         app.MapPost("/{idCliente}/{idProducto}", ([FromServices] IReservaService reservaService, [FromBody] ReservaRequestDto reservaDto, [FromQuery] Guid idCliente, [FromQuery] string codigoProducto) =>
@@ -30,7 +38,8 @@ public class EndpointsReservas : ICarterModule
 
             return Results.Created();
 
-        }).WithTags("Reservas");
+        }).WithTags("Reservas")
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
 
         //Cancelar reserva
@@ -40,7 +49,8 @@ public class EndpointsReservas : ICarterModule
 
             return Results.Ok();
 
-        }).WithTags("Reservas");
+        }).WithTags("Reservas")
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
         //Aprobar reserva
         app.MapPut("/aprobar/{id}", ([FromServices] IReservaService reservaService, [FromQuery] int id) =>
@@ -49,7 +59,8 @@ public class EndpointsReservas : ICarterModule
 
             return Results.Ok();
 
-        }).WithTags("Reservas");
+        }).WithTags("Reservas")
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
 
         //Rechazar reserva
         app.MapPut("/rechazar/{id}", ([FromServices] IReservaService reservaService, [FromQuery] int id) =>
@@ -58,6 +69,7 @@ public class EndpointsReservas : ICarterModule
 
             return Results.Ok();
 
-        }).WithTags("Reservas");
+        }).WithTags("Reservas")
+        .RequireAuthorization(new AuthorizeAttribute { Roles = "administrador" });
     }
 }
